@@ -4,3 +4,5 @@ __pycache__/
 downloads/
 .env
 cookies.txt
+cookies_part_*
+encoded.txt
