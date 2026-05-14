@@ -52,9 +52,9 @@ def download_mp3(url):
         }],
         'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
         'quiet': True,
-        'extractor_args': {'youtube': {'skip': ['webpage', 'configs'], 'player_client': ['android', 'ios']}},
+        'extractor_args': {'youtube': {'player_skip': ['webpage', 'configs', 'js'], 'player_client': ['ios']}},
         'extractor_retries': 5,
-        'geo_bypass': True,
+        
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.230 Mobile Safari/537.36',
             'Accept-Language': 'en-US,en;q=0.9',
@@ -75,9 +75,9 @@ def download_mp4(url):
         'format': 'best[height<=480]',
         'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
         'quiet': True,
-        'extractor_args': {'youtube': {'skip': ['webpage', 'configs'], 'player_client': ['android', 'ios']}},
+        'extractor_args': {'youtube': {'player_skip': ['webpage', 'configs', 'js'], 'player_client': ['ios']}},
         'extractor_retries': 5,
-        'geo_bypass': True,
+        
         'http_headers': {
             'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.230 Mobile Safari/537.36',
             'Accept-Language': 'en-US,en;q=0.9',
