@@ -1,4 +1,5 @@
 import os
+import base64
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQueryHandler, filters, ContextTypes
@@ -10,6 +11,19 @@ MAX_SIZE_MB = 50                      # Batas ukuran file kiriman Telegram (grat
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+
+def _apply_cookies(ydl_opts):
+    cookies_b64 = os.getenv("COOKIES_B64")
+    if cookies_b64:
+        try:
+            with open("cookies.txt", "wb") as f:
+                f.write(base64.b64decode(cookies_b64))
+            ydl_opts['cookiefile'] = "cookies.txt"
+        except Exception as e:
+            logger.warning(f"Failed to decode cookies: {e}")
+    elif os.path.exists("cookies.txt"):
+        ydl_opts['cookiefile'] = "cookies.txt"
 
 # --- Fungsi download MP3 ---
 def download_mp3(url):
@@ -32,9 +46,7 @@ def download_mp3(url):
             'Accept-Language': 'en-US,en;q=0.9',
         },
     }
-    cookies_file = "cookies.txt"
-    if os.path.exists(cookies_file):
-        ydl_opts['cookiefile'] = cookies_file
+    _apply_cookies(ydl_opts)
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         file_path = ydl.prepare_filename(info)
@@ -57,9 +69,7 @@ def download_mp4(url):
             'Accept-Language': 'en-US,en;q=0.9',
         },
     }
-    cookies_file = "cookies.txt"
-    if os.path.exists(cookies_file):
-        ydl_opts['cookiefile'] = cookies_file
+    _apply_cookies(ydl_opts)
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         file_path = ydl.prepare_filename(info)
