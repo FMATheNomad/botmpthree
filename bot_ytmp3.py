@@ -24,6 +24,8 @@ def download_mp3(url):
         }],
         'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
         'quiet': True,
+        'extractor_args': {'youtube': {'player_client': ['android']}},
+        'extractor_retries': 3,
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
@@ -39,6 +41,8 @@ def download_mp4(url):
         'format': 'best[height<=480]',
         'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
         'quiet': True,
+        'extractor_args': {'youtube': {'player_client': ['android']}},
+        'extractor_retries': 3,
     }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
