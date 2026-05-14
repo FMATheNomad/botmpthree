@@ -15,23 +15,40 @@ logger = logging.getLogger(__name__)
 def download_mp3(url):
     output_dir = "downloads"
     os.makedirs(output_dir, exist_ok=True)
-    ydl_opts = {
-        'format': 'bestaudio/best',
-        'postprocessors': [{
-            'key': 'FFmpegExtractAudio',
-            'preferredcodec': 'mp3',
-            'preferredquality': '192',
-        }],
-        'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
-        'quiet': True,
-        'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
-        'extractor_retries': 5,
-        'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.230 Mobile Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-        },
-    }
+    cookies_file = "cookies.txt"
+    if os.path.exists(cookies_file):
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+            'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
+            'quiet': True,
+            'cookiefile': cookies_file,
+            'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
+            'extractor_retries': 5,
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            },
+        }
+    else:
+        ydl_opts = {
+            'format': 'bestaudio/best',
+            'postprocessors': [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }],
+            'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
+            'quiet': True,
+            'extractor_args': {'youtube': {'player_client': ['android', 'web', 'ios']}},
+            'extractor_retries': 5,
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            },
+        }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         file_path = ydl.prepare_filename(info)
@@ -42,18 +59,30 @@ def download_mp3(url):
 def download_mp4(url):
     output_dir = "downloads"
     os.makedirs(output_dir, exist_ok=True)
-    ydl_opts = {
-        'format': 'best[height<=480]',
-        'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
-        'quiet': True,
-        'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
-        'extractor_retries': 5,
-        'http_headers': {
-            'User-Agent': 'Mozilla/5.0 (Linux; Android 14) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.6099.230 Mobile Safari/537.36',
-            'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
-            'Accept-Language': 'en-US,en;q=0.5',
-        },
-    }
+    cookies_file = "cookies.txt"
+    if os.path.exists(cookies_file):
+        ydl_opts = {
+            'format': 'best[height<=480]',
+            'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
+            'quiet': True,
+            'cookiefile': cookies_file,
+            'extractor_args': {'youtube': {'player_client': ['android', 'web']}},
+            'extractor_retries': 5,
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            },
+        }
+    else:
+        ydl_opts = {
+            'format': 'best[height<=480]',
+            'outtmpl': f'{output_dir}/%(title)s.%(ext)s',
+            'quiet': True,
+            'extractor_args': {'youtube': {'player_client': ['android', 'web', 'ios']}},
+            'extractor_retries': 5,
+            'http_headers': {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+            },
+        }
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
         file_path = ydl.prepare_filename(info)
