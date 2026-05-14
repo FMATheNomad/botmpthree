@@ -16,20 +16,23 @@ logger = logging.getLogger(__name__)
 
 
 def _apply_cookies(ydl_opts):
-    raw = os.getenv("COOKIES_B64", "")
-    if raw.startswith("gz:"):
+    combined = ""
+    for key, val in sorted(os.environ.items()):
+        if key.startswith("COOKIES_B64"):
+            combined += val
+    if combined.startswith("gz:"):
         try:
-            compressed = base64.b64decode(raw[3:])
+            compressed = base64.b64decode(combined[3:])
             data = gzip.decompress(compressed)
             with open("cookies.txt", "wb") as f:
                 f.write(data)
             ydl_opts['cookiefile'] = "cookies.txt"
         except Exception as e:
             logger.warning(f"Failed to decode gzip cookies: {e}")
-    elif raw:
+    elif combined:
         try:
             with open("cookies.txt", "wb") as f:
-                f.write(base64.b64decode(raw))
+                f.write(base64.b64decode(combined))
             ydl_opts['cookiefile'] = "cookies.txt"
         except Exception as e:
             logger.warning(f"Failed to decode cookies: {e}")
