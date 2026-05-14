@@ -1,4 +1,6 @@
 import os
+import io
+import gzip
 import base64
 import logging
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
@@ -14,11 +16,20 @@ logger = logging.getLogger(__name__)
 
 
 def _apply_cookies(ydl_opts):
-    cookies_b64 = os.getenv("COOKIES_B64")
-    if cookies_b64:
+    raw = os.getenv("COOKIES_B64", "")
+    if raw.startswith("gz:"):
+        try:
+            compressed = base64.b64decode(raw[3:])
+            data = gzip.decompress(compressed)
+            with open("cookies.txt", "wb") as f:
+                f.write(data)
+            ydl_opts['cookiefile'] = "cookies.txt"
+        except Exception as e:
+            logger.warning(f"Failed to decode gzip cookies: {e}")
+    elif raw:
         try:
             with open("cookies.txt", "wb") as f:
-                f.write(base64.b64decode(cookies_b64))
+                f.write(base64.b64decode(raw))
             ydl_opts['cookiefile'] = "cookies.txt"
         except Exception as e:
             logger.warning(f"Failed to decode cookies: {e}")
