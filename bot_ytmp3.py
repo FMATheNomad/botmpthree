@@ -5,7 +5,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, CallbackQu
 from pytubefix import YouTube
 from pytubefix.cli import on_progress
 
-TOKEN = os.getenv("YTMP3_TOKEN", "8621575752:AAGNPpfJPt47e-u3E4ciVvTiqearqvQ4HzU")
+TOKEN = os.getenv("YTMP3_TOKEN")  # Set YTMP3_TOKEN env var in Railway
 MAX_SIZE_MB = 50
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO)
